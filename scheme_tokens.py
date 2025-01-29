@@ -1,16 +1,3 @@
-"""The scheme_tokens module provides functions tokenize_line and tokenize_lines
-for converting (iterators producing) strings into (iterators producing) lists
-of tokens.  A token may be:
-
-  * A number (represented as an int or float)
-  * A boolean (represented as a bool)
-  * A symbol (represented as a string)
-  * A delimiter, including parentheses, dots, and single quotes
-
-This file also includes some features of Scheme that have not been addressed
-in the course, such as Scheme strings.
-"""
-
 from ucb import main
 import sys
 
@@ -40,10 +27,6 @@ def valid_symbol(s):
     return True
 
 def next_candidate_token(line, k):
-    """A tuple (tok, k'), where tok is the next substring of line at or
-    after position k that could be a token (assuming it passes a validity
-    check), and k' is the position in line following that token.  Returns
-    (None, len(line)) when there are no more tokens."""
     while k < len(line):
         c = line[k]
         if c == ';':
@@ -54,14 +37,14 @@ def next_candidate_token(line, k):
             if c == ']': c = ')'
             if c == '[': c = '('
             return c, k+1
-        elif c == '#':  # Boolean values #t and #f
+        elif c == '#':  
             return line[k:k+2], min(k+2, len(line))
-        elif c == ',': # Unquote; check for @
+        elif c == ',': 
             if k+1 < len(line) and line[k+1] == '@':
                 return ',@', k+2
             return c, k+1
         elif c in _STRING_DELIMS:
-            if k+1 < len(line) and line[k+1] == c: # No triple quotes in Scheme
+            if k+1 < len(line) and line[k+1] == c: 
                 return c+c, k+2
             s = ""
             k += 1
