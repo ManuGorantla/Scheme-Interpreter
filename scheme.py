@@ -56,9 +56,6 @@ def read_eval_print_loop(next_line, env, interactive=False, quiet=False,
             return
 
 def add_builtins(frame, funcs_and_names):
-    """Enter bindings in FUNCS_AND_NAMES into FRAME, an environment frame,
-    as built-in procedures. Each item in FUNCS_AND_NAMES has the form
-    (NAME, PYTHON-FUNCTION, INTERNAL-NAME)."""
     for name, py_func, proc_name, need_env in funcs_and_names:
         frame.define(name, BuiltinProcedure(py_func, name=proc_name, need_env=need_env))
 
@@ -76,7 +73,7 @@ def create_global_frame():
 @main
 def run(*argv):
     import argparse
-    parser = argparse.ArgumentParser(description='CS 61A Scheme Interpreter')
+    parser = argparse.ArgumentParser(description='Scheme Interpreter')
     parser.add_argument('--pillow-turtle', action='store_true',
                         help='run with pillow-based turtle. This is much faster for rendering but there is no GUI')
     parser.add_argument('--turtle-save-path', default=None,
