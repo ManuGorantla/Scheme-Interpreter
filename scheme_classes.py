@@ -25,20 +25,15 @@ class Frame:
 
     def define(self, symbol, value):
         """Define Scheme SYMBOL to have VALUE."""
-        # BEGIN PROBLEM 1
-        "*** YOUR CODE HERE ***"
         self.bindings[symbol] = value
-        # END PROBLEM 1
 
     def lookup(self, symbol):
         """Return the value bound to SYMBOL. Errors if SYMBOL is not found."""
-        # BEGIN PROBLEM 1
         "*** YOUR CODE HERE ***"
         if symbol in self.bindings:
             return self.bindings[symbol]
         elif self.parent != None:
             return self.parent.lookup(symbol)
-        # END PROBLEM 1
         raise SchemeError('unknown identifier: {0}'.format(symbol))
 
 
@@ -46,17 +41,10 @@ class Frame:
         """Return a new local frame whose parent is SELF, in which the symbols
         in a Scheme list of formal parameters FORMALS are bound to the Scheme
         values in the Scheme list VALS. Both FORMALS and VALS are represented
-        as Pairs. Raise an error if too many or too few vals are given.
+        as Pairs. Raise an error if too many or too few vals are given."""
 
-        >>> env = create_global_frame()
-        >>> formals, expressions = read_line('(a b c)'), read_line('(1 2 3)')
-        >>> env.make_child_frame(formals, expressions)
-        <{a: 1, b: 2, c: 3} -> <Global Frame>>
-        """
         if len(formals) != len(vals):
             raise SchemeError('Incorrect number of arguments to function call')
-        # BEGIN PROBLEM 8
-        "*** YOUR CODE HERE ***"
         newFrame = Frame(self)
 
         while formals != nil:
@@ -65,7 +53,6 @@ class Frame:
             vals = vals.rest
 
         return newFrame
-        # END PROBLEM 8
 
 ##############
 # Procedures #
@@ -109,16 +96,7 @@ class LambdaProcedure(Procedure):
             repr(self.formals), repr(self.body), repr(self.env))
 
 class MuProcedure(Procedure):
-    """A procedure defined by a mu expression, which has dynamic scope.
-     _________________
-    < Scheme is cool! >
-     -----------------
-            \   ^__^
-             \  (oo)\_______
-                (__)\       )\/\
-                    ||----w |
-                    ||     ||
-    """
+    """A procedure defined by a mu expression, which has dynamic scope."""
 
     def __init__(self, formals, body):
         """A procedure with formal parameter list FORMALS (a Scheme list) and
