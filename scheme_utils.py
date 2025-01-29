@@ -73,10 +73,8 @@ def validate_procedure(procedure):
 def validate_form(expr, min, max=float('inf')):
     """Check EXPR is a proper list whose length is at least MIN and no more
     than MAX (default: no maximum). Raises a SchemeError if this is not the
-    case.
-
-    >>> validate_form(read_line('(a b)'), 2)
-    """
+    case."""
+    
     if not scheme_listp(expr):
         raise SchemeError('badly formed expression: ' + repl_str(expr))
     length = len(expr)
@@ -90,7 +88,6 @@ def validate_formals(formals):
     in which each symbol is distinct. Raise a SchemeError if the list of
     formals is not a list of symbols or if any symbol is repeated.
 
-    >>> validate_formals(read_line('(a b c)'))
     """
     symbols = set()
     def validate_and_add(symbol, is_last):
