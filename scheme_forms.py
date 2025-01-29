@@ -35,50 +35,33 @@ def do_define_form(expressions, env):
     if scheme_symbolp(signature):
         # assigning a name to a value e.g. (define x (+ 1 2))
         validate_form(expressions, 2, 2) # Checks that expressions is a list of length exactly 2
-        # BEGIN PROBLEM 4
-        "*** YOUR CODE HERE ***"
+
         env.define(signature, scheme_eval(expressions.rest.first, env))
 
         return signature
-        # END PROBLEM 4
     elif isinstance(signature, Pair) and scheme_symbolp(signature.first):
-        # defining a named procedure e.g. (define (f x y) (+ x y))
-        # BEGIN PROBLEM 10
+        # defining a named procedure 
         "*** YOUR CODE HERE ***"
         validate_formals (signature. rest)
         result = signature.first
         lambda_procedure = LambdaProcedure(signature.rest, expressions. rest, env)
         env. define(result, lambda_procedure)
         return result
-        # END PROBLEM 10
     else:
         bad_signature = signature.first if isinstance(signature, Pair) else signature
         raise SchemeError('non-symbol: {0}'.format(bad_signature))
 
 def do_quote_form(expressions, env):
     """Evaluate a quote form.
-
-    >>> env = create_global_frame()
-    >>> do_quote_form(read_line("((+ x 2))"), env) # evaluating (quote (+ x 2))
-    Pair('+', Pair('x', Pair(2, nil)))
     """
     validate_form(expressions, 1, 1)
-    # BEGIN PROBLEM 5
-    "*** YOUR CODE HERE ***"
     if expressions.rest == nil:
         return expressions.first
     
     return expressions
-    # END PROBLEM 5
 
 def do_begin_form(expressions, env):
     """Evaluate a begin form.
-
-    >>> env = create_global_frame()
-    >>> x = do_begin_form(read_line("((print 2) 3)"), env) # evaluating (begin (print 2) 3)
-    2
-    >>> x
-    3
     """
     validate_form(expressions, 1)
     return eval_all(expressions, env)
@@ -86,27 +69,15 @@ def do_begin_form(expressions, env):
 def do_lambda_form(expressions, env):
     """Evaluate a lambda form.
 
-    >>> env = create_global_frame()
-    >>> do_lambda_form(read_line("((x) (+ x 2))"), env) # evaluating (lambda (x) (+ x 2))
-    LambdaProcedure(Pair('x', nil), Pair(Pair('+', Pair('x', Pair(2, nil))), nil), <Global Frame>)
+    
     """
     validate_form(expressions, 2)
     formals = expressions.first
     validate_formals(formals)
-    # BEGIN PROBLEM 7
-    "*** YOUR CODE HERE ***"
     return LambdaProcedure(formals, expressions.rest, env)
-    # END PROBLEM 7
 
 def do_if_form(expressions, env):
-    """Evaluate an if form.
-
-    >>> env = create_global_frame()
-    >>> do_if_form(read_line("(#t (print 2) (print 3))"), env) # evaluating (if #t (print 2) (print 3))
-    2
-    >>> do_if_form(read_line("(#f (print 2) (print 3))"), env) # evaluating (if #f (print 2) (print 3))
-    3
-    """
+    """Evaluate an if form. """
     validate_form(expressions, 2, 3)
     if is_scheme_true(scheme_eval(expressions.first, env)):
         return scheme_eval(expressions.rest.first, env)
@@ -115,20 +86,7 @@ def do_if_form(expressions, env):
 
 def do_and_form(expressions, env):
     """Evaluate a (short-circuited) and form.
-
-    >>> env = create_global_frame()
-    >>> do_and_form(read_line("(#f (print 1))"), env) # evaluating (and #f (print 1))
-    False
-    >>> # evaluating (and (print 1) (print 2) (print 4) 3 #f)
-    >>> do_and_form(read_line("((print 1) (print 2) (print 3) (print 4) 3 #f)"), env)
-    1
-    2
-    3
-    4
-    False
     """
-    # BEGIN PROBLEM 12
-    "*** YOUR CODE HERE ***"
     if len(expressions) == 0:
         return True
     elif len(expressions) == 1:
@@ -138,24 +96,11 @@ def do_and_form(expressions, env):
     else:
         return scheme_eval(expressions.first, env)
 
-    # END PROBLEM 12
 
 def do_or_form(expressions, env):
     """Evaluate a (short-circuited) or form.
 
-    >>> env = create_global_frame()
-    >>> do_or_form(read_line("(10 (print 1))"), env) # evaluating (or 10 (print 1))
-    10
-    >>> do_or_form(read_line("(#f 2 3 #t #f)"), env) # evaluating (or #f 2 3 #t #f)
-    2
-    >>> # evaluating (or (begin (print 1) #f) (begin (print 2) #f) 6 (begin (print 3) 7))
-    >>> do_or_form(read_line("((begin (print 1) #f) (begin (print 2) #f) 6 (begin (print 3) 7))"), env)
-    1
-    2
-    6
     """
-    # BEGIN PROBLEM 12
-    "*** YOUR CODE HERE ***"
   
     if len(expressions) == 0:
         return False
@@ -165,13 +110,9 @@ def do_or_form(expressions, env):
         return scheme_eval(expressions.first, env)
     else:
         return do_or_form(expressions.rest, env)
-    # END PROBLEM 12
 
 def do_cond_form(expressions, env):
     """Evaluate a cond form.
-
-    >>> do_cond_form(read_line("((#f (print 2)) (#t 3))"), create_global_frame())
-    3
     """
     while expressions is not nil:
         clause = expressions.first
@@ -183,21 +124,15 @@ def do_cond_form(expressions, env):
         else:
             test = scheme_eval(clause.first, env)
         if is_scheme_true(test):
-            # BEGIN PROBLEM 13
             "*** YOUR CODE HERE ***"
             if clause.rest == nil:
                 return test
             else:
                 return eval_all(clause.rest, env)
-            # END PROBLEM 13
         expressions = expressions.rest
 
 def do_let_form(expressions, env):
     """Evaluate a let form.
-
-    >>> env = create_global_frame()
-    >>> do_let_form(read_line("(((x 2) (y 3)) (+ x y))"), env)
-    5
     """
     validate_form(expressions, 2)
     let_env = make_let_frame(expressions.first, env)
@@ -211,8 +146,6 @@ def make_let_frame(bindings, env):
     if not scheme_listp(bindings):
         raise SchemeError('bad bindings list in let form')
     names = vals = nil
-    # BEGIN PROBLEM 14
-    "*** YOUR CODE HERE ***"
     x = bindings
 
     while x != nil:
@@ -222,7 +155,6 @@ def make_let_frame(bindings, env):
         x = x.rest
     
     validate_formals(names)
-    # END PROBLEM 14
     return env.make_child_frame(names, vals)
 
 
@@ -262,10 +194,7 @@ def do_mu_form(expressions, env):
     validate_form(expressions, 2)
     formals = expressions.first
     validate_formals(formals)
-    # BEGIN PROBLEM 11
-    "*** YOUR CODE HERE ***"
     return MuProcedure (formals, expressions. rest)
-    # END PROBLEM 11
 
 
 
