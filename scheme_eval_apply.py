@@ -32,13 +32,11 @@ def scheme_eval(expr, env, _=None): # Optional third argument is ignored
     if scheme_symbolp(first) and first in scheme_forms.SPECIAL_FORMS:
         return scheme_forms.SPECIAL_FORMS[first](rest, env)
     else:
-        # BEGIN PROBLEM 3
-        "*** YOUR CODE HERE ***"
+
         first = scheme_eval(first, env)
         rest = rest.map(lambda x: scheme_eval(x, env))
 
         return scheme_apply(first, rest, env)
-        # END PROBLEM 3
 
 def scheme_apply(procedure, args, env):
     """Apply Scheme PROCEDURE to argument values ARGS (a Scheme list) in
@@ -47,8 +45,6 @@ def scheme_apply(procedure, args, env):
     if not isinstance(env, Frame):
        assert False, "Not a Frame: {}".format(env)
     if isinstance(procedure, BuiltinProcedure):
-        # BEGIN PROBLEM 2
-        "*** YOUR CODE HERE ***"
         pythonVersion = []
         
         while args != nil:
@@ -62,46 +58,24 @@ def scheme_apply(procedure, args, env):
 
         if procedure.need_env:
             pythonVersion += [env]
-        # END PROBLEM 2
         try:
-            # BEGIN PROBLEM 2
-            "*** YOUR CODE HERE ***"
             return procedure.py_func(*pythonVersion)
-            # END PROBLEM 2
         except TypeError as err:
             raise SchemeError('incorrect number of arguments: {0}'.format(procedure))
     elif isinstance(procedure, LambdaProcedure):
-        # BEGIN PROBLEM 9
-        "*** YOUR CODE HERE ***"
         result = procedure. env.make_child_frame(procedure.formals, args)
         newbody = procedure. body
         return eval_all (newbody, result)        
-        # END PROBLEM 9
     elif isinstance(procedure, MuProcedure):
-        # BEGIN PROBLEM 11
         "*** YOUR CODE HERE ***"
         result = env.make_child_frame (procedure.formals, args)
         return eval_all(procedure.body, result)   
-        # END PROBLEM 11
     else:
         assert False, "Unexpected procedure: {}".format(procedure)
 
 def eval_all(expressions, env):
     """Evaluate each expression in the Scheme list EXPRESSIONS in
-    Frame ENV (the current environment) and return the value of the last.
-
-    >>> eval_all(read_line("(1)"), create_global_frame())
-    1
-    >>> eval_all(read_line("(1 2)"), create_global_frame())
-    2
-    >>> x = eval_all(read_line("((print 1) 2)"), create_global_frame())
-    1
-    >>> x
-    2
-    >>> eval_all(read_line("((define x 2) x)"), create_global_frame())
-    2
-    """
-    # BEGIN PROBLEM 6
+    Frame ENV (the current environment) and return the value of the last."""
     if expressions == nil:
         return None
     else:
@@ -115,7 +89,6 @@ def eval_all(expressions, env):
 
 
     
-    # END PROBLEM 6
 
 
 ################################
@@ -149,26 +122,6 @@ def optimize_tail_calls(unoptimized_scheme_eval):
             return Unevaluated(expr, env)
 
         result = Unevaluated(expr, env)
-        # BEGIN OPTIONAL PROBLEM 1
-        "*** YOUR CODE HERE ***"
-        # END OPTIONAL PROBLEM 1
     return optimized_eval
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-################################################################
-# Uncomment the following line to apply tail call optimization #
-################################################################
 
 # scheme_eval = optimize_tail_calls(scheme_eval)
